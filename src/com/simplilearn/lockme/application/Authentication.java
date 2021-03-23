@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.LinkedHashMap;
 import java.util.Scanner;
 
 import com.simplilearn.lockme.model.UserCredentials;
@@ -74,19 +75,40 @@ public class Authentication {
 		
 		System.out.println("Enter Username :");
 		String username = keyboard.next();
-		users.setUsername(username);
+		if(!validateUser(username)) {
+			users.setUsername(username);
+			System.out.println("Enter password :");
+			String password = keyboard.next();
+			users.setPassword(password);
+			
+			output.println(users.getUsername());
+			output.println(users.getPassword());
+			
+			System.out.println("User Registration Suscessful !");
+		}else {
+			System.out.println("User Already Exist : 200OK, Please Try With Other UserName");
+		}
 		
-		System.out.println("Enter Password :");
-		String password = keyboard.next();
-		users.setPassword(password);
-		
-		output.println(users.getUsername());
-		output.println(users.getPassword());
-		
-		System.out.println("User Registration Suscessful !");
 		output.close();
 		
 	}
+	public static boolean validateUser(String uname) {
+		/*
+		 * boolean found = false; while(input.hasNext() && !found) {
+		 * if(input.next().equals(uname)) { found = true; break; } }
+		 */
+		boolean found = false;
+		LinkedHashMap<String, String> existedusers = new LinkedHashMap<String, String>();
+		while(input.hasNext()) {
+			String existeduser = input.next().toLowerCase();
+			existedusers.put(existeduser, existeduser);
+		}
+		if(existedusers.containsKey(uname.toLowerCase())) {
+			found = true;
+		}
+		return found;
+	}
+	
 	public static void loginUser() {
 		System.out.println("==========================================");
 		System.out.println("*					*");
@@ -126,7 +148,7 @@ public class Authentication {
 	//store credentails
 	public static void storeCredentials(String loggedInUser) {
 		System.out.println("==========================================");
-		System.out.println("*					*");
+		System.out.println("*					              *");
 		System.out.println("*   WELCOME TO DIGITAL LOCKER STORE YOUR CREDS HERE	 *");
 		System.out.println("*					*");
 		System.out.println("==========================================");
@@ -136,16 +158,23 @@ public class Authentication {
 		System.out.println("Enter Site Name :");
 		String siteName = keyboard.next();
 		userCredentials.setSiteName(siteName);
+
+
 		
 		System.out.println("Enter Username :");
 		String username = keyboard.next();
 		userCredentials.setUsername(username);
+
 		
+		
+		
+		userCredentials.toString();
 		System.out.println("Enter Password :");
 		String password = keyboard.next();
 		userCredentials.setPassword(password);
 		
 		lockerOutput.println(userCredentials.getLoggedInUser());
+		System.out.println();
 		lockerOutput.println(userCredentials.getSiteName());
 		lockerOutput.println(userCredentials.getUsername());
 		lockerOutput.println(userCredentials.getPassword());
@@ -166,8 +195,10 @@ public class Authentication {
 		
 		
 		while(lockerInput.hasNext()) {
-//			System.out.println(lockerInput.hasNext());
+			//System.out.println(lockerInput.hasNext());
 			if(lockerInput.next().equals(inpUsername)) {
+				//System.out.println(lockerInput.hasNext());
+				///System.out.println("&&&&&&&&&&"+lockerInput.next().equals(inpUsername));
 				System.out.println("Site Name: "+lockerInput.next());
 				System.out.println("User Name: "+lockerInput.next());
 				System.out.println("User Password: "+lockerInput.next());
@@ -193,14 +224,17 @@ public class Authentication {
 			
 			//out put 
 			output = new PrintWriter( new FileWriter(dbFile,true));
+			
 			lockerOutput = new PrintWriter( new FileWriter(lockerFile,true));
 			
 			users = new Users();
 			userCredentials  = new UserCredentials();
 			
 			
+			
+			
 		} catch (IOException e) {
-			System.out.println("404 : File Not Found ");
+			System.out.println("404 : data File Not Found "+e);
 		}
 		
 	}
